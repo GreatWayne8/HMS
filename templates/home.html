@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <div style="position: relative; text-align: center; padding: 50px 0; font-family: Arial, sans-serif;">
+        
+        <!-- Background Image with Blur Effect -->
+        <div id="background-image" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; z-index: -1; 
+                    background-image: url('{% static "images/A_highly_professional,_serene,_and_clean_medical-t.png" %}'); 
+                    background-size: cover; 
+                    background-position: center; 
+                    filter: blur(5px);"></div> <!-- Added blur effect -->
+
+        <!-- Container with blur effect and solid background color to enhance text visibility -->
+        <div style="position: relative; padding: 50px 0; background-color: rgba(244, 249, 244, 0.9);
+                    backdrop-filter: blur(10px); /* Adjust blur amount here */">
+        
+            <!-- Title -->
+            <h1 style="color: #2c7a7b; font-size: 36px; margin-bottom: 20px; animation: fadeInDown 2s;">
+                Welcome to the Telemedicine App!
+            </h1>
+
+            <!-- Subtitle -->
+            <p style="color: #4a5568; font-size: 18px; margin-bottom: 30px; line-height: 1.6;">
+                Empowering your health with technology. Manage your medical records, appointments, and wellness all in one place.
+            </p>
+
+            <!-- Navigation Links -->
+            <div style="margin-bottom: 30px;">
+                <a href="/admin/" style="color: #38b2ac; font-size: 16px; text-decoration: none; margin-right: 20px; border-bottom: 2px solid transparent; transition: color 0.3s ease, border-bottom 0.3s ease;">
+                    Admin Panel
+                </a>
+                <a href="{% url 'login' %}" style="color: #38b2ac; font-size: 16px; text-decoration: none; margin-right: 20px; border-bottom: 2px solid transparent; transition: color 0.3s ease, border-bottom 0.3s ease;">
+                    Login
+                </a>
+                
+                <a href="{% url 'register' %}" style="color: #38b2ac; font-size: 16px; text-decoration: none; border-bottom: 2px solid transparent; transition: color 0.3s ease, border-bottom 0.3s ease;">
+                    Register
+                </a>
+            </div>
+
+            <!-- Button -->
+            <button onclick="window.location.href='/login/'" style="background-color: #38b2ac; color: white; padding: 15px 30px; border-radius: 5px; border: none; font-size: 16px; cursor: pointer; transition: background-color 0.3s ease, transform 0.3s ease;">
+                Get Started
+            </button>
+        </div>
+        
+        <script>
+            const button = document.querySelector('button');
+            button.addEventListener('mouseover', () => {
+                button.style.backgroundColor = '#319795'; /* Darker teal on hover */
+                button.style.transform = 'scale(1.05)'; /* Slightly increase size on hover */
+            });
+            button.addEventListener('mouseout', () => {
+                button.style.backgroundColor = '#38b2ac'; /* Revert to original color */
+                button.style.transform = 'scale(1)'; /* Revert to original size */
+            });
+
+            // Hover effect for navigation links
+            const links = document.querySelectorAll('a');
+            links.forEach(link => {
+                link.addEventListener('mouseover', () => {
+                    link.style.color = '#2c7a7b'; /* Darker teal color on hover */
+                    link.style.borderBottom = '2px solid #2c7a7b'; /* Add bottom border on hover */
+                });
+                link.addEventListener('mouseout', () => {
+                    link.style.color = '#38b2ac'; /* Revert to original color */
+                    link.style.borderBottom = '2px solid transparent'; /* Remove bottom border on hover out */
+                });
+            });
+        </script>
+
+        <!-- Keyframe animation for the fade-in effect -->
+        <style>
+            @keyframes fadeInDown {
+                from {
+                    opacity: 0;
+                    transform: translateY(-20px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+        </style>
+    </div>
+{% endblock %}

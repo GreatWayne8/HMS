@@ -1,0 +1,132 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Telemedicine App{% endblock %}</title>
+    
+    <!-- Google Fonts Inline Link -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
+
+    <!-- Inline CSS Styling -->
+    <style>
+        /* Global Reset and Styling */
+        body {
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f9f4; /* Soft background color */
+            color: #2c7a7b; /* Text color */
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* Full height for flex container */
+        }
+
+        /* Container styling */
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header styling */
+        header {
+            background-color: #38b2ac; /* Teal background */
+            padding: 20px 0;
+            text-align: center;
+            color: white;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 36px;
+            font-weight: 700;
+        }
+
+        /* Navigation styling */
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        nav ul li {
+            display: inline;
+            margin-right: 20px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 400;
+            transition: color 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            color: #f0fff4; /* Slight color change on hover */
+        }
+
+        /* Main content styling */
+        main {
+            padding: 50px 0;
+            text-align: center;
+            flex: 1; /* Allows the main content to grow and fill space */
+        }
+
+        /* Footer styling */
+        footer {
+            background-color: #2c7a7b; /* Dark teal background */
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            animation: fadeInUp 2s ease-in-out; /* Add animation */
+        }
+
+        footer p {
+            margin: 0;
+            font-size: 14px;
+        }
+
+        /* Keyframes for footer fade-in animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px); /* Start slightly below */
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0); /* End at normal position */
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Telemedicine App</h1>
+            <nav>
+                <ul>
+                    <li><a href="{% url 'home' %}">Home</a></li>
+                    <li><a href="/admin/">Admin</a></li>
+                    <li><a href="/login/">Login</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <main>
+        <div class="container">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Telemedicine App. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>
