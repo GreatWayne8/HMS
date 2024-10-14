@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Admin Dashboard</h2>
+<p>Welcome, Admin {{ user.first_name }}!</p>
+<p>Here you can manage doctors, patients, and the overall system.</p>
+
+<ul>
+    <li><a href="{% url 'add_doctor' %}">Add Doctor</a></li>
+    <li><a href="{% url 'add_patient' %}">Add Patient</a></li>
+    <li><a href="{% url 'view_users' %}">View All Users</a></li>
+</ul>
+{% endblock %}

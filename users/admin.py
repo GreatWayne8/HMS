@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import CustomUser, Patient, Doctor, Appointment, MedicalRecord
+from .models import CustomUser, Patient, Doctor, MedicalRecord
 
 @admin.register(CustomUser)
 class CustomUserAdmin(admin.ModelAdmin):
@@ -16,10 +16,10 @@ class DoctorAdmin(admin.ModelAdmin):
     list_display = ('user', 'specialization', 'created_at')
     search_fields = ('user__username', 'specialization')
 
-@admin.register(Appointment)
-class AppointmentAdmin(admin.ModelAdmin):
-    list_display = ('patient', 'doctor', 'appointment_date')
-    search_fields = ('patient__user__username', 'doctor__user__username')
+# @admin.register(Appointment)
+# class AppointmentAdmin(admin.ModelAdmin):
+#     list_display = ('patient', 'doctor', 'appointment_date')
+#     search_fields = ('patient__user__username', 'doctor__user__username')
 
 @admin.register(MedicalRecord)
 class MedicalRecordAdmin(admin.ModelAdmin):

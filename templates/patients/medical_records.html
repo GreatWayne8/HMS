@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Medical Records</h2>
+
+{% if medical_records %}
+    <ul>
+        {% for record in medical_records %}
+            <li>{{ record.date }}: {{ record.description }}</li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No medical records found.</p>
+{% endif %}
+{% endblock %}

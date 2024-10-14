@@ -1,5 +1,5 @@
 from django import forms
-from .models import Patient, Doctor, Appointment, MedicalRecord
+from .models import Patient, Doctor, MedicalRecord
 from django.contrib.auth.forms import UserCreationForm
 from .models import CustomUser
 
@@ -23,13 +23,24 @@ class DoctorForm(forms.ModelForm):
         fields = ['user', 'specialization']
 
 # Appointment Form
-class AppointmentForm(forms.ModelForm):
-    class Meta:
-        model = Appointment
-        fields = ['patient', 'doctor', 'appointment_date']
+# class AppointmentForm(forms.ModelForm):
+#     class Meta:
+#         model = Appointment
+#         fields = ['patient', 'doctor', 'appointment_date']
 
-# Medical Record Form
+# # Medical Record Form
 class MedicalRecordForm(forms.ModelForm):
     class Meta:
         model = MedicalRecord
         fields = ['patient', 'doctor', 'notes']
+
+class ProfileUpdateForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ['first_name', 'last_name', 'email', 'profile_image']
+
+
+class CustomUserUpdateForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ['email'] 

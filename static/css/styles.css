@@ -137,3 +137,84 @@ a:hover {
 .fade-in {
     animation: fadeIn 2s ease-in;
 }
+    .appointment-container {
+        max-width: 600px;
+        margin: 40px auto;
+        padding: 20px;
+        background-color: #e0f7fa; /* Light teal background */
+        border-radius: 15px;
+        box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .appointment-title {
+        text-align: center;
+        color: #004d40; /* Deep teal */
+        margin-bottom: 30px;
+        font-family: 'Helvetica', sans-serif;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    label {
+        display: block;
+        font-size: 16px;
+        color: #00796b; /* Teal color for labels */
+        margin-bottom: 8px;
+        font-weight: bold; /* Bold label text */
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        border: 2px solid #00796b; /* Teal border */
+        border-radius: 5px;
+        transition: border-color 0.3s ease;
+    }
+
+    .form-control:focus {
+        border-color: #004d40; /* Darker teal on focus */
+        outline: none;
+        box-shadow: 0 0 5px rgba(0, 77, 64, 0.5); /* Shadow on focus */
+    }
+
+    .btn-submit {
+        background-color: #00796b; /* Teal button */
+        color: #ffffff; /* White text */
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        width: 100%;
+    }
+
+    .btn-submit:hover {
+        background-color: #004d40; /* Darker teal on hover */
+    }
+
+    .icon {
+        font-size: 20px; /* Larger icon size */
+        vertical-align: middle; /* Align icon with text */
+        margin-right: 8px; /* Space between icon and label */
+    }
+.doctor-dashboard .card {
+    border-radius: 10px;
+}
+
+.doctor-dashboard .card-header {
+    background-color: #00796b; /* Deep teal */
+    color: white;
+}
+
+.doctor-dashboard .welcome-message {
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.doctor-dashboard .dashboard-links .btn {
+    padding: 10px;
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+}

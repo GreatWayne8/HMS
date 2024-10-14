@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<h2>Update Profile</h2>
+
+<div>
+    {% if user.profile_image %}
+        <img src="{{ user.profile_image.url }}" alt="Profile Image" style="width:150px; height:auto;">
+    {% else %}
+        <img src="{% static 'default.jpg' %}" alt="Default Image" style="width:150px; height:auto;">
+    {% endif %}
+</div>
+
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ user_form.as_p }}
+    {{ patient_form.as_p }}
+    <button type="submit">Update Profile</button>
+</form>
+
+{% endblock %}

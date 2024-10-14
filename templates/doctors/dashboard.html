@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="max-width: 800px; margin: 50px auto;">
+    <div style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); border-radius: 10px;">
+        <div
+            style="background-color: #00796b; color: white; text-align: center; padding: 20px; border-top-left-radius: 10px; border-top-right-radius: 10px;">
+            <h2 style="margin: 0;">Doctor Dashboard</h2>
+        </div>
+        <div style="padding: 20px;">
+            <p style="font-size: 1.2rem; text-align: center; font-weight: bold;">Welcome, Dr. {{ user.first_name }}!</p>
+            <p style="text-align: center; margin-bottom: 20px;">Here you can manage your appointments, view patient
+                medical histories, and provide consultations.</p>
+
+            <ul style="list-style: none; padding: 0;">
+                <li style="margin-bottom: 10px;">
+                    <a href="{% url 'view_appointments' %}"
+                        style="display: block; width: 100%; text-align: center; padding: 10px; font-size: 1.1rem; color: rgb(0, 71, 71); border: 1px solid teal; border-radius: 5px; text-decoration: none; transition: all 0.3s ease;">
+                        View Appointments
+                    </a>
+                </li>
+                <li style="margin-bottom: 10px;">
+                    <a href="{% url 'view_patients' %}"
+                        style="display: block; width: 100%; text-align: center; padding: 10px; font-size: 1.1rem; color: rgb(0, 71, 71); border: 1px solid teal; border-radius: 5px; text-decoration: none; transition: all 0.3s ease;">
+                        View Patients
+                    </a>
+                </li>
+                <li style="margin-bottom: 10px;">
+                    <a href="{% url 'add_medical_record' %}"
+                        style="display: block; width: 100%; text-align: center; padding: 10px; font-size: 1.1rem; color: rgb(0, 71, 71); border: 1px solid teal; border-radius: 5px; text-decoration: none; transition: all 0.3s ease;">
+                        Add Medical Record
+                    </a>
+                </li>
+            </ul>
+
+            </ul>
+        </div>
+    </div>
+</div>
+<style>
+    a:hover {
+        background-color: teal; /* Change background to blue on hover */
+        color: rgb(0, 102, 102); /* Change text color to white on hover */
+        border-color: #007bff; /* Keep the border color consistent */
+    }
+</style>
+
+{% endblock %}

@@ -1,28 +1,86 @@
-<!-- templates/users/register.html -->
 {% extends 'base.html' %}
 
 {% block title %}Register{% endblock %}
 
 {% block content %}
 <div style="max-width: 400px; margin: auto; padding: 20px; border-radius: 8px; background-color: rgba(244, 249, 244, 0.9); box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-    <h2 style="text-align: center; color: #2c7a7b;">Register</h2>
+    <h2 style="text-align: center; color: #2c7a7b; margin-bottom: 20px;">Register</h2>
+
     <form method="POST">
         {% csrf_token %}
         
-        {% for field in form %}
+        <!-- User Form Fields -->
+        {% for field in user_form %}
             <div style="margin-bottom: 15px;">
-                <label style="display: block; margin-bottom: 5px;">{{ field.label }}</label>
-                {{ field }} <!-- Render field without add_class -->
+                <label style="display: block; font-weight: bold; margin-bottom: 5px;">{{ field.label }}</label>
+                {{ field }} <!-- No add_class, but styled with default classes -->
                 {% if field.errors %}
                     <p style="color: red; font-size: 14px;">{{ field.errors|first }}</p>
                 {% endif %}
             </div>
         {% endfor %}
-        
-        <button type="submit" 
-                style="width: 100%; padding: 12px; background-color: #38b2ac; color: white; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; transition: background-color 0.3s;">
+
+        <!-- User Type Selection -->
+        <div style="margin-bottom: 20px;">
+            <label style="font-weight: bold;">User Type:</label>
+            <select name="user_type" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
+                <option value="patient">Patient</option>
+                <option value="doctor">Doctor</option>
+            </select>
+        </div>
+
+        <!-- Patient Fields (Hidden initially) -->
+        <div id="patient-fields" style="display: none;">
+            {% for field in patient_form %}
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; font-weight: bold; margin-bottom: 5px;">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <p style="color: red; font-size: 14px;">{{ field.errors|first }}</p>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Doctor Fields (Hidden initially) -->
+        <div id="doctor-fields" style="display: none;">
+            {% for field in doctor_form %}
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; font-weight: bold; margin-bottom: 5px;">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <p style="color: red; font-size: 14px;">{{ field.errors|first }}</p>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Register Button -->
+        <button type="submit" style="width: 100%; padding: 12px; background-color: #38b2ac; color: white; border: none; border-radius: 5px; font-size: 16px; cursor: pointer;">
             Register
         </button>
     </form>
 </div>
+
+<!-- Script to toggle patient/doctor fields -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const userTypeSelect = document.querySelector('select[name="user_type"]');
+    const patientFields = document.getElementById('patient-fields');
+    const doctorFields = document.getElementById('doctor-fields');
+
+    userTypeSelect.addEventListener('change', function () {
+        if (this.value === 'patient') {
+            patientFields.style.display = 'block';
+            doctorFields.style.display = 'none';
+        } else if (this.value === 'doctor') {
+            doctorFields.style.display = 'block';
+            patientFields.style.display = 'none';
+        } else {
+            patientFields.style.display = 'none';
+            doctorFields.style.display = 'none';
+        }
+    });
+});
+</script>
 {% endblock %}

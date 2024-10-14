@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="appointment-container">
+    <h2 class="appointment-title">Schedule Appointment</h2>
+
+    <form method="POST" class="appointment-form">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="patient_name"><i class="fas fa-user icon"></i> Patient Name</label>
+            <input type="text" id="patient_name" class="form-control" value="{{ request.user.patient.get_full_name }}" readonly>
+        </div>
+
+        <div class="form-group">
+            <label for="doctor"><i class="fas fa-user-md icon"></i> Select Doctor</label>
+            <select id="doctor" name="doctor" class="form-control" required>
+                {% for doctor in doctors %}
+                    <option value="{{ doctor.id }}">{{ doctor.username }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="date"><i class="fas fa-calendar-alt icon"></i> Appointment Date</label>
+            <input type="date" name="appointment_date" id="date" class="form-control" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="time"><i class="fas fa-clock icon"></i> Appointment Time</label>
+            <input type="time" name="appointment_time" id="time" class="form-control" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="reason"><i class="fas fa-stethoscope icon"></i> Reason for Appointment</label>
+            <textarea name="reason" id="reason" class="form-control" required></textarea>
+        </div>
+        
+        <button type="submit" class="btn-submit">Schedule Appointment</button>
+    </form>
+</div>
+
+<style>
+    .appointment-container {
+        max-width: 600px;
+        margin: 40px auto;
+        padding: 20px;
+        background-color: #e0f7fa; /* Light teal background */
+        border-radius: 15px;
+        box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .appointment-title {
+        text-align: center;
+        color: #004d40; /* Deep teal */
+        margin-bottom: 30px;
+        font-family: 'Helvetica', sans-serif;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    label {
+        display: block;
+        font-size: 16px;
+        color: #00796b; /* Teal color for labels */
+        margin-bottom: 8px;
+        font-weight: bold; /* Bold label text */
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        border: 2px solid #00796b; /* Teal border */
+        border-radius: 5px;
+        transition: border-color 0.3s ease;
+    }
+
+    .form-control:focus {
+        border-color: #004d40; /* Darker teal on focus */
+        outline: none;
+        box-shadow: 0 0 5px rgba(0, 77, 64, 0.5); /* Shadow on focus */
+    }
+
+    .btn-submit {
+        background-color: #00796b; /* Teal button */
+        color: #ffffff; /* White text */
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        width: 100%;
+    }
+
+    .btn-submit:hover {
+        background-color: #004d40; /* Darker teal on hover */
+    }
+
+    .icon {
+        font-size: 20px; /* Larger icon size */
+        vertical-align: middle; /* Align icon with text */
+        margin-right: 8px; /* Space between icon and label */
+    }
+</style>
+{% endblock %}
