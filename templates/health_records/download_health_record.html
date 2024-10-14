@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Record</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        h2 { color: #333; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #ddd; padding: 8px; }
+        th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+    <h2>Health Records for {{ records.first.patient.get_full_name }}</h2>
+    <table>
+        <tr>
+            <th>Date</th>
+            <th>Diagnosis</th>
+            <th>Treatment Plan</th>
+            <th>Lab Results</th>
+        </tr>
+        {% for record in records %}
+        <tr>
+            <td>{{ record.date_created }}</td>
+            <td>{{ record.diagnosis }}</td>
+            <td>{{ record.treatment_plan }}</td>
+            <td>{{ record.lab_results }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

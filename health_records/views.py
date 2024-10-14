@@ -3,6 +3,8 @@ from django.contrib.auth.decorators import login_required
 from .models import HealthRecord
 from users.models import CustomUser
 from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.views.generic import UpdateView
 
 
 @login_required
@@ -32,3 +34,14 @@ def doctor_view_health_records(request, patient_id):
         'patient': patient, 
         'records': records
     })
+
+class DoctorUpdateHealthRecordView(PermissionRequiredMixin, UpdateView):
+    model = HealthRecord
+    fields = ['diagnosis', 'treatment_plan', 'lab_results']
+    permission_required = 'health_records.change_healthrecord'
+    template_name = 'health_records/doctor_update_record.html'
+    success_url = '/success/'  # Redirect to a success page or to the patient's records page
+
+    def get_queryset(self):
+        """Restrict the queryset to only allow doctors to edit records of their patients."""
+        return HealthRecord.objects.filter(patient=self.request.user)

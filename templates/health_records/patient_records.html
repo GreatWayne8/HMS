@@ -1,0 +1,10 @@
+<h2>My Health Records</h2>
+
+{% for record in records %}
+    <div>
+        <h4>Diagnosis: {{ record.diagnosis }}</h4>
+        <p>Treatment Plan: {{ record.treatment_plan }}</p>
+        <p>Lab Results: {{ record.lab_results }}</p>
+        <p>Date: {{ record.date_created }}</p>
+    </div>
+{% endfor %}

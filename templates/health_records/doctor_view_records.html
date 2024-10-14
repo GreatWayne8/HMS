@@ -1,0 +1,19 @@
+<h2>Health Records for {{ patient.get_full_name }}</h2>
+
+{% for record in records %}
+    <div>
+        <h4>Diagnosis: {{ record.diagnosis }}</h4>
+        <p>Treatment Plan: {{ record.treatment_plan }}</p>
+        <p>Lab Results: {{ record.lab_results }}</p>
+
+        <!-- Editing form for doctors -->
+        <form method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="record_id" value="{{ record.id }}">
+            <textarea name="diagnosis">{{ record.diagnosis }}</textarea>
+            <textarea name="treatment_plan">{{ record.treatment_plan }}</textarea>
+            <textarea name="lab_results">{{ record.lab_results }}</textarea>
+            <button type="submit">Update Record</button>
+        </form>
+    </div>
+{% endfor %}
