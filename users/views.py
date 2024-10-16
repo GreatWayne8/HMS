@@ -2,10 +2,9 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
 from .forms import UserRegistrationForm
-from .forms import PatientForm, DoctorForm, MedicalRecordForm
+from .forms import PatientForm, DoctorForm
 from django.contrib.auth.forms import AuthenticationForm
 from .models import Patient, Doctor  
-from .models import MedicalRecord  # Import your MedicalRecord model
 from .forms import  ProfileUpdateForm,CustomUserUpdateForm
 
 
@@ -37,15 +36,6 @@ def add_doctor(request):
 
 
 # View to add a Medical Record
-def add_medical_record(request):
-    if request.method == 'POST':
-        form = MedicalRecordForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('medical_record_list')  # Redirect to record list
-    else:
-        form = MedicalRecordForm()
-    return render(request, 'add_medical_record.html', {'form': form})
 
 # Dashboard views
 @login_required
@@ -96,12 +86,12 @@ def register(request):
 
 
 
-@login_required  
-def view_medical_records(request):
+# @login_required  
+# def view_medical_records(request):
 
-    medical_records = MedicalRecord.objects.filter(patient=request.user.patient)
+#     medical_records = MedicalRecord.objects.filter(patient=request.user.patient)
 
-    return render(request, 'patients/medical_records.html', {'medical_records': medical_records})
+#     return render(request, 'patients/medical_records.html', {'medical_records': medical_records})
 
 
 

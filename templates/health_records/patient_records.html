@@ -1,10 +1,62 @@
-<h2>My Health Records</h2>
+{% extends 'base.html' %}
 
-{% for record in records %}
-    <div>
-        <h4>Diagnosis: {{ record.diagnosis }}</h4>
-        <p>Treatment Plan: {{ record.treatment_plan }}</p>
-        <p>Lab Results: {{ record.lab_results }}</p>
-        <p>Date: {{ record.date_created }}</p>
+{% block content %}
+    <h2 style="font-size: 24px; color: #333;">My Health Records</h2>
+
+    <div class="records-container">
+        {% for record in records %}
+            <div class="record-card">
+                <h4>Diagnosis: {{ record.diagnosis }}</h4>
+                <p>Treatment Plan: {{ record.treatment_plan }}</p>
+                <p>Lab Results: {{ record.lab_results }}</p>
+                <p>Date: {{ record.date_created }}</p>
+                <!-- Add the download link for each health record -->
+                <a href="{% url 'download_health_record' record.id %}" class="btn">Download This Record (PDF)</a>
+                <a href="{% url 'download_health_record_csv' record.id %}" class="btn">Download This Record (CSV)</a>
+            </div>
+        {% endfor %}
     </div>
-{% endfor %}
+{% endblock %}
+
+<style>
+    /* Styles for My Health Records */
+    .records-container {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        margin-top: 20px;
+    }
+
+    .record-card {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .record-card h4 {
+        font-size: 20px;
+        color: #007bff;
+        margin-bottom: 10px;
+    }
+
+    .record-card p {
+        font-size: 16px;
+        color: #555;
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: rgb(1, 109, 109);
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+    }
+
+    .btn:hover {
+        background-color: rgb(1, 73, 73);
+    }
+
+</style>

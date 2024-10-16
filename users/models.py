@@ -31,11 +31,3 @@ class Doctor(models.Model):
         
 
 
-class MedicalRecord(models.Model):
-    patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
-    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
-    notes = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True, null=True)  # Allow null values
-
-    def __str__(self):
-        return f"Record for {self.patient} by {self.doctor}"
