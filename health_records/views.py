@@ -14,7 +14,9 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from io import BytesIO
 from .forms import MedicalRecordForm
 from .models import MedicalRecord
-from reportlab.pdfgen import canvas
+from reportlab.platypus import Image
+
+
 @login_required
 def patient_health_records(request):
     patient = request.user
@@ -65,7 +67,7 @@ def view_health_records(request):
         })
 
     health_records = MedicalRecord.objects.filter(patient=patient)
-    return render(request, 'health_records/edical_records.html', {
+    return render(request, 'health_records/edit_records.html', {
         'health_records': health_records
     })
 
@@ -105,99 +107,62 @@ def download_health_record(request, record_id):
     # Access the patient's name from the CustomUser model
     patient_name = f"{health_record.patient.first_name} {health_record.patient.last_name}"
 
-    # Debugging: Print health record details
-    print("Health Record Details:")
-    print(f"Patient Name: {patient_name}")
-    print(f"Date Created: {health_record.date_created}")
-    print(f"Diagnosis: {health_record.diagnosis}")
-    print(f"Treatment Plan: {health_record.treatment_plan}")
-    print(f"Lab Results: {health_record.lab_results}")
-
     # Create a BytesIO buffer to hold the PDF data
     buffer = BytesIO()
     doc = SimpleDocTemplate(buffer, pagesize=letter)
+
+    # Create a list to hold the elements
     elements = []
 
     # Define styles
     styles = getSampleStyleSheet()
-
+    
     # Title Style
-    title_style = ParagraphStyle('TitleStyle', parent=styles['Title'], fontSize=26, textColor=colors.HexColor("#00796B"), spaceAfter=12)
-
-    # Section Header Style
-    header_style = ParagraphStyle('HeaderStyle', parent=styles['Heading1'], fontSize=14, textColor=colors.HexColor("#004D40"), spaceAfter=6)
+    title_style = ParagraphStyle('TitleStyle', parent=styles['Title'], fontSize=24, textColor=colors.HexColor("#00796B"), spaceAfter=12)
 
     # Text Style
     text_style = ParagraphStyle('TextStyle', parent=styles['Normal'], fontSize=12, textColor=colors.black)
 
-    # Create PDF canvas for custom drawing
-    pdf_canvas = canvas.Canvas(buffer, pagesize=letter)
+    # Adding logo
+    logo = 'path/to/your/logo.png'  # Update this path to your logo
+    elements.append(Image(logo, width=100, height=50))  # Adjust width and height as needed
+    elements.append(Spacer(1, 12))  # Add space after logo
 
-    # Add logo at the top center
-    logo_path = 'static/images/logo.png'  # Update this path to your logo
-    pdf_canvas.drawImage(logo_path, 200, 700, width=200, height=80, mask='auto')  # Center logo at top
-
-    # Overlay a semi-transparent rectangle to simulate fading effect
-    pdf_canvas.setFillColor(colors.Color(0, 0, 0, 0.05))  # Light black with low alpha
-    pdf_canvas.rect(0, 0, letter[0], letter[1], fill=1)  # Full page rectangle
-
-    # Start building the PDF elements
+    # Adding title
     elements.append(Paragraph("Health Record", title_style))
     elements.append(Spacer(1, 12))  # Add space between title and patient info
 
-    # Section for Patient Information
-    elements.append(Paragraph("Patient Information", header_style))
-    elements.append(Spacer(1, 6))
-
-    # Create table data for patient info
-    patient_data = [
-        ["<b>Patient Name:</b>", Paragraph(patient_name, text_style)],
-        ["<b>Date of Consultation:</b>", Paragraph(health_record.date_created.strftime('%Y-%m-%d'), text_style)],
+    # Create table data
+    data = [
+        ["Patient Name:", Paragraph(patient_name, text_style)],
+        ["Date of Consultation:", Paragraph(health_record.date_created.strftime('%Y-%m-%d'), text_style)],
+        ["Diagnosis:", Paragraph(health_record.diagnosis, text_style)],
+        ["Treatment Plan:", Paragraph(health_record.treatment_plan, text_style)],
+        ["Lab Results:", Paragraph(health_record.lab_results or 'N/A', text_style)],
     ]
-    patient_table = Table(patient_data)
-    patient_table.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#E0F2F1")),  # Light background for header
+
+    # Create table and style it
+    table = Table(data)
+    table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#E0F2F1")),  # Header background color
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
         ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+        ('FONTNAME', (0, 0), (-1, -1), 'Helvetica'),
         ('FONTSIZE', (0, 0), (-1, -1), 12),
-        ('BOTTOMPADDING', (0, 0), (-1, 0), 6),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
         ('BACKGROUND', (0, 1), (-1, -1), colors.white),
-        ('GRID', (0, 0), (-1, -1), 1, colors.HexColor("#00796B")),  # Grid lines
+        ('GRID', (0, 0), (-1, -1), 1, colors.HexColor("#00796B")),  # Grid lines in teal color
     ]))
-    elements.append(patient_table)
 
-    # Section for Medical Information
-    elements.append(Spacer(1, 12))  # Add space between sections
-    elements.append(Paragraph("Medical Information", header_style))
-    elements.append(Spacer(1, 6))
+    # Add the table to elements
+    elements.append(table)
 
-    # Create table data for medical info
-    medical_data = [
-        ["<b>Diagnosis:</b>", Paragraph(health_record.diagnosis if health_record.diagnosis else 'N/A', text_style)],
-        ["<b>Treatment Plan:</b>", Paragraph(health_record.treatment_plan if health_record.treatment_plan else 'N/A', text_style)],
-        ["<b>Lab Results:</b>", Paragraph(health_record.lab_results if health_record.lab_results else 'N/A', text_style)],
-    ]
-    medical_table = Table(medical_data)
-    medical_table.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#E0F2F1")),  # Light background for header
-        ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
-        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
-        ('FONTSIZE', (0, 0), (-1, -1), 12),
-        ('BOTTOMPADDING', (0, 0), (-1, 0), 6),
-        ('BACKGROUND', (0, 1), (-1, -1), colors.white),
-        ('GRID', (0, 0), (-1, -1), 1, colors.HexColor("#00796B")),  # Grid lines
-    ]))
-    elements.append(medical_table)
-
-    # Footer
+    # Add footer
     elements.append(Spacer(1, 20))  # Space before footer
     elements.append(Paragraph("Thank you for choosing our services!", text_style))
 
-    # Build the document
+    # Build the PDF
     doc.build(elements)
-
-    # Save the canvas and close it
-    pdf_canvas.save()
 
     # Set the response to be a downloadable PDF
     response = HttpResponse(buffer.getvalue(), content_type='application/pdf')
@@ -207,5 +172,6 @@ def download_health_record(request, record_id):
     buffer.close()
 
     return response
+
 
 

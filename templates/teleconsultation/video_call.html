@@ -1,0 +1,144 @@
+<h1>Teleconsultation with {{ teleconsultation.doctor.get_full_name }}</h1>
+
+<div id="video-container">
+    <div id="local-video-wrapper">
+        <video id="local-video" autoplay muted></video>
+        <p>Your Video</p>
+    </div>
+    <div id="remote-video-wrapper">
+        <video id="remote-video" autoplay></video>
+        <p>Doctor's Video</p>
+    </div>
+</div>
+
+<div id="chat-container">
+    <h2>Chat</h2>
+    <div id="chat-box">
+        <!-- Messages will appear here -->
+    </div>
+    <input type="text" id="chat-input" placeholder="Type a message" />
+    <button id="send-button">Send</button>
+</div>
+
+<script>
+    const teleconsultationId = "{{ teleconsultation.id }}";
+    const ws = new WebSocket('ws://' + window.location.host + '/ws/teleconsultation/' + teleconsultationId + '/');
+    
+    const localVideo = document.getElementById('local-video');
+    const remoteVideo = document.getElementById('remote-video');
+    const chatBox = document.getElementById('chat-box');
+    const chatInput = document.getElementById('chat-input');
+    const sendButton = document.getElementById('send-button');
+    
+    let localStream;
+    let peerConnection;
+    const iceServers = { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] };
+
+    function displayMessage(message) {
+        const messageElem = document.createElement('div');
+        messageElem.textContent = message;
+        chatBox.appendChild(messageElem);
+    }
+
+    sendButton.onclick = () => {
+        const message = chatInput.value;
+        ws.send(JSON.stringify({
+            'type': 'chat',
+            'message': message
+        }));
+        displayMessage('You: ' + message);
+        chatInput.value = '';
+    };
+
+    async function getLocalStream() {
+        try {
+            localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+            localVideo.srcObject = localStream;
+        } catch (error) {
+            console.error('Error accessing media devices.', error);
+        }
+    }
+
+    function createPeerConnection() {
+        peerConnection = new RTCPeerConnection(iceServers);
+
+        localStream.getTracks().forEach(track => peerConnection.addTrack(track, localStream));
+
+        peerConnection.ontrack = (event) => {
+            remoteVideo.srcObject = event.streams[0];
+        };
+
+        peerConnection.onicecandidate = (event) => {
+            if (event.candidate) {
+                ws.send(JSON.stringify({
+                    'type': 'candidate',
+                    'candidate': event.candidate
+                }));
+            }
+        };
+    }
+
+    ws.onmessage = async function(event) {
+        const data = JSON.parse(event.data);
+
+        if (data.type === 'signal') {
+            const signal = data.signal;
+
+            if (signal.type === 'offer') {
+                await peerConnection.setRemoteDescription(new RTCSessionDescription(signal));
+                const answer = await peerConnection.createAnswer();
+                await peerConnection.setLocalDescription(answer);
+                ws.send(JSON.stringify({ 'type': 'signal', 'signal': peerConnection.localDescription }));
+            } else if (signal.type === 'answer') {
+                await peerConnection.setRemoteDescription(new RTCSessionDescription(signal));
+            } else if (signal.type === 'candidate') {
+                await peerConnection.addIceCandidate(new RTCIceCandidate(signal.candidate));
+            }
+        } else if (data.type === 'chat') {
+            displayMessage('Doctor: ' + data.message);
+        }
+    };
+
+    getLocalStream().then(() => {
+        createPeerConnection();
+        peerConnection.createOffer().then(offer => {
+            peerConnection.setLocalDescription(offer);
+            ws.send(JSON.stringify({ 'type': 'signal', 'signal': offer }));
+        });
+    });
+</script>
+
+<style>
+    #video-container {
+        display: flex;
+        justify-content: space-around;
+        margin-bottom: 20px;
+    }
+    #local-video-wrapper, #remote-video-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    #chat-container {
+        width: 100%;
+        max-width: 600px;
+        margin: 0 auto;
+        border: 1px solid #ccc;
+        padding: 10px;
+        border-radius: 10px;
+    }
+    #chat-box {
+        height: 150px;
+        overflow-y: auto;
+        border: 1px solid #ccc;
+        padding: 5px;
+        margin-bottom: 10px;
+    }
+    #chat-input {
+        width: calc(100% - 80px);
+        margin-right: 10px;
+    }
+    #send-button {
+        width: 70px;
+    }
+</style>
